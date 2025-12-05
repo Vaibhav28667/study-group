@@ -8,6 +8,8 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 
+
+
 const AddDetailSchema = Yup.object().shape({
   name: Yup.string().min(2, 'Too Short').max(40, 'Too Long').required('Provide group name..!'),
   description: Yup.string().min(10, 'Description too short').required('Provide description..!'),
@@ -49,6 +51,26 @@ const AddDetail = () => {
     validationSchema: AddDetailSchema,
   });
 
+  const upload = (e) => {
+    const file = e.target.files[0];
+    const fd = new FormData();
+    fd.append('file', file)
+    fd.append('upload_preset', 'MERN_6:30')
+    fd.append('cloud_name', 'dyhnpblpk')
+
+    axios.post('https://api.cloudinary.com/v1_1/dyhnpblpk/image/upload', fd)
+      .then((result) => {
+        toast.success('Joined Group successfully');
+        console.log(result.data);
+        adddetailForm.setFieldValue('thumbnail', result.data.url);
+
+      }).catch((err) => {
+        toast.error('Error in  joining');
+        console.log(err);
+
+      });
+  }
+
   return (
     <div className="mt-7 mx-auto w-1/3 bg-white border border-gray-200 rounded-xl shadow-2xs dark:bg-gray-500 dark:border-neutral-700">
       <div className="p-4 sm:p-7">
@@ -86,21 +108,6 @@ const AddDetail = () => {
                 />
                 {(adddetailForm.errors.description && adddetailForm.touched.description) && (
                   <p className="text-xs text-red-600 mt-2">{adddetailForm.errors.description}</p>
-                )}
-              </div>
-
-              {/* Owner */}
-              <div>
-                <label className="block text-sm mb-2 dark:text-white">Owner</label>
-                <input
-                  type="text"
-                  name="owner"
-                  onChange={adddetailForm.handleChange}
-                  value={adddetailForm.values.owner}
-                  className="py-2.5 px-4 w-full border-gray-200 rounded-lg sm:text-sm dark:bg-neutral-900 dark:text-neutral-300"
-                />
-                {(adddetailForm.errors.owner && adddetailForm.touched.owner) && (
-                  <p className="text-xs text-red-600 mt-2">{adddetailForm.errors.owner}</p>
                 )}
               </div>
 
@@ -146,6 +153,7 @@ const AddDetail = () => {
               <input
                 type="file"
                 placeholder="Thumbnail Image URL"
+                onChange={upload}
                 className="py-2.5 px-4 w-full border-gray-200 rounded-lg sm:text-sm dark:bg-neutral-900 dark:text-neutral-300"
               />
               {(adddetailForm.errors.thumbnail && adddetailForm.touched.thumbnail) && (
@@ -157,7 +165,7 @@ const AddDetail = () => {
               type="submit"
               className="w-full py-3 px-4 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
             >
-              JOIN GROUP
+              CREATE GROUP
             </button>
         </div>
       </form>

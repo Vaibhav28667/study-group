@@ -3,6 +3,7 @@ const cors = require('cors'); //cross origin resource sharing middleware
 const express = require('express'); // Import the Express library
 
 const userRouter = require('./routers/userRouter');
+const groupRouter = require('./routers/groupRouter');
 
 
 const app = express(); // Create an express application
@@ -15,6 +16,7 @@ app.use(cors({
 }))
 app.use(express.json()); //Parse json request bodies
 app.use('/user', userRouter)
+app.use('/group',groupRouter)
 
 
 // // Routing
