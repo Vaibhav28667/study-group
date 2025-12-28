@@ -8,13 +8,11 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 
-
-
 const AddDetailSchema = Yup.object().shape({
   name: Yup.string().min(2, 'Too Short').max(40, 'Too Long').required('Provide group name..!'),
   description: Yup.string().min(10, 'Description too short').required('Provide description..!'),
-  owner: Yup.string().required('Provide owner name..!'),
-  members: Yup.number().min(1, 'Minimum 1 member required').required('Provide members count..!'),
+  // owner: Yup.string().required('Provide owner name..!'),
+  // members: Yup.number().min(1, 'Minimum 1 member required').required('Provide members count..!'),
   category: Yup.string().required('Select a category..!'),
   thumbnail: Yup.string().required('Provide thumbnail URL..!'),
 });
@@ -40,7 +38,7 @@ const AddDetail = () => {
         .then((result) => {
           toast.success('Group Added Successfully..!');
           resetForm();
-          router.push('/groups');
+          router.push('/browse-groups');
         })
         .catch((err) => {
           console.log(err);

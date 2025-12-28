@@ -2,7 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const Model = require('../models/groupmodel')
+const Model = require('../models/groupmodel');
+const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.post('/add', (req, res) => {
         .then((result) => {
             res.status(200).json(result);
         }).catch((err) => {
-           console.log(err);
+            console.log(err);
             res.status(500).json(err);
         })
 
@@ -37,11 +38,9 @@ router.get('/getbyid/:id', (req, res) => {
             res.status(200).json(result);
         }).catch((err) => {
             console.log(err);
-            
+
             res.status(500).json(err);
         });
-
-
 })
 
 router.get('/getbyname/:name', (req, res) => {
@@ -51,10 +50,7 @@ router.get('/getbyname/:name', (req, res) => {
         }).catch((err) => {
             res.status(500).json(err);
             console.log(err);
-
         });
-
-
 })
 
 router.delete('/delete/:id', (req, res) => {
@@ -77,11 +73,49 @@ router.put('/update/:id', (req, res) => {
         }).catch((err) => {
             res.status(500).json(err);
             console.log(err);
-
         });
-
-
 })
+
+router.put('/addmember/:id', auth, (req, res) => {
+    console.log(req.body);
+
+    Model.findById(req.params.id)
+        .then((result) => {
+            if (result.membersArray.includes(req.user._id)) {
+                return res.status(400).json({ message: 'Member Already exists' });
+            }
+            Model.findByIdAndUpdate(req.params.id, { $push: { membersArray: req.user._id } }, { new: true })
+                .then((result) => {
+                    res.status(200).json(result);
+                }).catch((err) => {
+                    res.status(500).json(err);
+                    console.log(err);
+                });
+        }).catch((err) => {
+            res.status(500).json(err);
+            console.log(err);
+        });
+})
+
+router.get('/getjoinedgroups', auth, (req, res) => {
+    Model.find({ membersArray: req.user._id })
+        .then((result) => {
+            res.status(200).json(result);
+        }).catch((err) => {
+            res.status(500).json(err);
+            console.log(err);
+        });
+});
+
+router.get('/getownedgroups', auth, (req, res) => {
+    Model.find({ owner: req.user.name })
+        .then((result) => {
+            res.status(200).json(result);
+        }).catch((err) => {
+            res.status(500).json(err);
+            console.log(err);
+        });
+});
 
 router.post('/authenticate', (req, res) => {
     Model.findOne(req.body)
@@ -90,8 +124,8 @@ router.post('/authenticate', (req, res) => {
                 // Authentication successful
                 // Generate JWT Token
 
-                const { _id, name,  } = result; //Destructuring
-                const payload = { _id, name,  };
+                const { _id, name, } = result; //Destructuring
+                const payload = { _id, name, };
 
                 jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' }, (err, token) => {
                     if (err) {

@@ -7,6 +7,7 @@ const groupSchema = new Schema({
     members: { type: Number, require: true },
     category: { type: String, require: true },
     thumbnail: { type: String, require: true },
+    membersArray: { type: Array, default: [] }
 }, { timestamps: true });
 
 module.exports = model('Group', groupSchema);
