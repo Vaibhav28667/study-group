@@ -7,6 +7,7 @@ const groupSchema = new Schema({
     members: { type: Number, require: true },
     category: { type: String, require: true },
     thumbnail: { type: String, require: true },
+    sharedResources: { type: Array, default: [] },
     membersArray: { type: Array, default: [] }
 }, { timestamps: true });
 
