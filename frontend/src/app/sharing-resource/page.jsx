@@ -166,6 +166,7 @@ const SharingResource = () => {
                 description: formData.description,
                 fileType: formData.fileType,
                 uploadedBy: currentUser.name || 'Anonymous',
+                uploadedByUserId: currentUser._id, // Store user ID to resolve member name
                 uploadedAt: new Date().toLocaleDateString(),
                 fileUrl: formData.fileType === 'link' ? formData.description : null,
                 fileName: formData.file?.name || null,
@@ -245,77 +246,84 @@ const SharingResource = () => {
         </div>
     );
 
-    const ResourceCard = ({ resource }) => (
-        <div className="group bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-lg overflow-hidden border border-gray-700 hover:border-cyan-500 hover:shadow-2xl hover:shadow-cyan-500/30 hover:scale-105 transition-all duration-300 p-6 flex flex-col h-full">
-            <div className="flex items-start justify-between mb-4">
-                <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <div className="text-3xl flex-shrink-0 mt-1">
-                        {resource.fileType === 'image' && '🖼️'}
-                        {resource.fileType === 'document' && '📄'}
-                        {resource.fileType === 'link' && '🔗'}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <h3 className="text-lg font-bold text-cyan-400 group-hover:text-cyan-300 transition line-clamp-2">{resource.title}</h3>
-                        <p className="text-sm text-gray-400 mt-1 line-clamp-2">{resource.description}</p>
-                    </div>
-                </div>
-                <button
-                    onClick={() => deleteResource(resource.id)}
-                    className="text-red-400 hover:text-red-300 text-xl flex-shrink-0 ml-2 hover:scale-125 transition"
-                    title="Delete resource"
-                >
-                    ✕
-                </button>
-            </div>
+    const ResourceCard = ({ resource }) => {
+        // Find the member name from groupMembers using uploadedByUserId
+        const memberName = resource.uploadedByUserId
+            ? groupMembers.find(m => m._id === resource.uploadedByUserId)?.name || resource.uploadedBy
+            : resource.uploadedBy;
 
-            <div className="border-t border-gray-700 pt-4 mt-4 space-y-2 text-xs text-gray-400 flex-grow">
-                <div className="flex justify-between">
-                    <span className="text-gray-400">👤 By</span>
-                    <span className="text-gray-300 font-semibold">{resource.uploadedBy}</span>
+        return (
+            <div className="group bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-lg overflow-hidden border border-gray-700 hover:border-cyan-500 hover:shadow-2xl hover:shadow-cyan-500/30 hover:scale-105 transition-all duration-300 p-6 flex flex-col h-full">
+                <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                        <div className="text-3xl flex-shrink-0 mt-1">
+                            {resource.fileType === 'image' && '🖼️'}
+                            {resource.fileType === 'document' && '📄'}
+                            {resource.fileType === 'link' && '🔗'}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                            <h3 className="text-lg font-bold text-cyan-400 group-hover:text-cyan-300 transition line-clamp-2">{resource.title}</h3>
+                            <p className="text-sm text-gray-400 mt-1 line-clamp-2">{resource.description}</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => deleteResource(resource.id)}
+                        className="text-red-400 hover:text-red-300 text-xl flex-shrink-0 ml-2 hover:scale-125 transition"
+                        title="Delete resource"
+                    >
+                        ✕
+                    </button>
                 </div>
-                <div className="flex justify-between">
-                    <span className="text-gray-400">📅 Date</span>
-                    <span className="text-gray-300 font-semibold">{resource.uploadedAt}</span>
-                </div>
-                {resource.fileName && (
+
+                <div className="border-t border-gray-700 pt-4 mt-4 space-y-2 text-xs text-gray-400 flex-grow">
                     <div className="flex justify-between">
-                        <span className="text-gray-400">📦 File</span>
-                        <span className="text-gray-300 font-semibold truncate">{(resource.fileSize / 1024).toFixed(2)} KB</span>
+                        <span className="text-gray-400">👤 By</span>
+                        <span className="text-gray-300 font-semibold">{memberName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-gray-400">📅 Date</span>
+                        <span className="text-gray-300 font-semibold">{resource.uploadedAt}</span>
+                    </div>
+                    {resource.fileName && (
+                        <div className="flex justify-between">
+                            <span className="text-gray-400">📦 File</span>
+                            <span className="text-gray-300 font-semibold truncate">{(resource.fileSize / 1024).toFixed(2)} KB</span>
+                        </div>
+                    )}
+                </div>
+
+                {resource.fileType === 'image' && resource.imageData && (
+                    <div className="mt-4 flex gap-2">
+                        <button
+                            onClick={() => handleViewImage(resource)}
+                            className="flex-1 py-2 px-3 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-500 transition flex items-center justify-center gap-1"
+                            title="View image"
+                        >
+                            👁️ View
+                        </button>
+                        <button
+                            onClick={() => handleDownloadImage(resource)}
+                            className="flex-1 py-2 px-3 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-500 transition flex items-center justify-center gap-1"
+                            title="Download image"
+                        >
+                            ⬇️ Download
+                        </button>
                     </div>
                 )}
+
+                {resource.fileUrl && (
+                    <a
+                        href={resource.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 w-full inline-block py-2 px-3 rounded-lg bg-cyan-600 text-white text-sm font-semibold text-center hover:bg-cyan-500 transition"
+                    >
+                        Open Link →
+                    </a>
+                )}
             </div>
-
-            {resource.fileType === 'image' && resource.imageData && (
-                <div className="mt-4 flex gap-2">
-                    <button
-                        onClick={() => handleViewImage(resource)}
-                        className="flex-1 py-2 px-3 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-500 transition flex items-center justify-center gap-1"
-                        title="View image"
-                    >
-                        👁️ View
-                    </button>
-                    <button
-                        onClick={() => handleDownloadImage(resource)}
-                        className="flex-1 py-2 px-3 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-500 transition flex items-center justify-center gap-1"
-                        title="Download image"
-                    >
-                        ⬇️ Download
-                    </button>
-                </div>
-            )}
-
-            {resource.fileUrl && (
-                <a
-                    href={resource.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 w-full inline-block py-2 px-3 rounded-lg bg-cyan-600 text-white text-sm font-semibold text-center hover:bg-cyan-500 transition"
-                >
-                    Open Link →
-                </a>
-            )}
-        </div>
-    );
+        );
+    };
 
     if (loading) {
         return (
@@ -497,19 +505,28 @@ const SharingResource = () => {
 
             {/* Upload Modal */}
             {showUploadModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
-                    <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-8 border border-gray-700 max-h-[90vh] overflow-y-auto">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-cyan-400">📤 Share Resource</h2>
+                <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                    {/* Background decorative elements */}
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                        <div className="absolute bottom-32 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+                        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '4s' }}></div>
+                    </div>
+                    <div className="bg-gradient-to-br from-slate-800 via-slate-900 to-black rounded-2xl shadow-2xl max-w-md w-full p-8 border border-cyan-500 border-opacity-30 max-h-[90vh] overflow-y-auto relative z-10">
+                        {/* Glow effect */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 via-purple-500 to-transparent opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300 pointer-events-none"></div>
+
+                        <div className="flex justify-between items-center mb-6 relative z-20">
+                            <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">📤 Share Resource</h2>
                             <button
                                 onClick={() => setShowUploadModal(false)}
-                                className="text-gray-400 hover:text-white text-2xl transition"
+                                className="text-gray-400 hover:text-cyan-400 text-2xl transition hover:scale-110"
                             >
                                 ✕
                             </button>
                         </div>
 
-                        <form onSubmit={handleUploadResource} className="space-y-5">
+                        <form onSubmit={handleUploadResource} className="space-y-5 relative z-20">
                             {/* Title */}
                             <div>
                                 <label className="block text-cyan-300 font-semibold mb-2">Title *</label>
@@ -644,7 +661,7 @@ const SharingResource = () => {
                             <div className="grid grid-cols-2 gap-4 mb-6 text-sm text-gray-400">
                                 <div>
                                     <p><span className="text-gray-300 font-semibold">Uploaded By:</span></p>
-                                    <p className="text-gray-300 ml-4">{previewImage.uploadedBy}</p>
+                                    <p className="text-gray-300 ml-4">{previewImage.uploadedByUserId ? groupMembers.find(m => m._id === previewImage.uploadedByUserId)?.name || previewImage.uploadedBy : previewImage.uploadedBy}</p>
                                 </div>
                                 <div>
                                     <p><span className="text-gray-300 font-semibold">Date:</span></p>

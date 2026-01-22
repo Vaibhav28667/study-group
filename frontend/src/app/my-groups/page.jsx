@@ -54,18 +54,26 @@ const MyGroups = () => {
     const GroupCard = ({ group, type }) => (
         <div className="group bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-xl overflow-hidden border border-gray-700 hover:border-cyan-500 hover:shadow-2xl hover:shadow-cyan-500/30 hover:scale-105 transition-all duration-300 flex flex-col h-full">
             {/* Image Container */}
-            <div className="relative h-48 overflow-hidden bg-slate-700 flex-shrink-0">
-                <img
-                    src={group.thumbnail}
-                    alt={group.name}
-                    className="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
+            <div className="relative h-48 overflow-hidden bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 flex-shrink-0 flex items-center justify-center">
+                {group.thumbnail && group.thumbnail !== 'undefined' ? (
+                    <img
+                        src={group.thumbnail}
+                        alt={group.name}
+                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300"
+                        onError={(e) => e.target.style.display = 'none'}
+                    />
+                ) : null}
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/40 via-blue-500/40 to-cyan-500/40 group-hover:opacity-70 transition-opacity"></div>
+                {/* Dark overlay for text visibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+                {/* Animated shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:via-white/20 transition-all duration-300"></div>
 
                 {/* Badge */}
                 <div className={`absolute top-4 right-4 px-4 py-2 rounded-full text-xs font-bold text-white shadow-lg ${type === 'owned'
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600'
-                        : 'bg-gradient-to-r from-cyan-600 to-blue-600'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600'
+                    : 'bg-gradient-to-r from-cyan-600 to-blue-600'
                     }`}>
                     {type === 'owned' ? '👑 Owned' : '✓ Joined'}
                 </div>
@@ -127,10 +135,10 @@ const MyGroups = () => {
             {/* Header */}
             <div className="max-w-7xl mx-auto mb-12">
                 <div className="text-center mb-8">
-                    <h1 className="text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 drop-shadow-lg">
-                        👥 My Groups
+                    <h1 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 drop-shadow-lg">
+                        👨‍🎓 My Study Groups
                     </h1>
-                    <p className="text-gray-400 text-lg">
+                    <p className="text-gray-400 text-base md:text-lg">
                         Manage your owned and joined study groups
                     </p>
                 </div>
