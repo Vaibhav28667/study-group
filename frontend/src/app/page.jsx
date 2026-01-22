@@ -9,14 +9,14 @@ export default function HomePage() {
             <header className="flex-1 flex flex-col justify-center items-center text-center py-20 px-6 relative overflow-hidden">
                 {/* Animated background elements */}
                 <div className="absolute inset-0 -z-10">
-                    <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                    <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-0"></div>
                     <div className="absolute top-40 right-10 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
                     <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-4000"></div>
                 </div>
 
-                <div className="relative z-10">
+                <div className="relative z-10 animate-fade-in">
                     {/* Tech Tribe Logo with Advanced Animations */}
-                    <div className="mb-8 flex justify-center">
+                    <div className="mb-8 flex justify-center animate-scale-in">
                         <div className="relative animate-float">
                             {/* Animated background glow */}
                             <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full blur-3xl opacity-40 -z-10 animate-glow-pulse"></div>
@@ -76,43 +76,43 @@ export default function HomePage() {
                     </div>
 
                     {/* Brand name with logo */}
-                    <div className="mb-6">
-                        <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-2">
+                    <div className="mb-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                        <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-2 animate-text-shimmer">
                             TECH TRIBE
                         </h1>
-                        <p className="text-sm md:text-base text-gray-400 font-semibold tracking-widest">
+                        <p className="text-sm md:text-base text-gray-400 font-semibold tracking-widest animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                             Learn. Connect. Grow.
                         </p>
                     </div>
 
-                    <h2 className="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent leading-tight">
+                    <h2 className="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent leading-tight animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
                         Find Your Perfect Study Group
                     </h2>
-                    <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-gray-300 leading-relaxed">
+                    <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-gray-300 leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
                         Connect with passionate learners, share knowledge, and ace your studies together. Join or create study groups tailored to your interests.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/browse-groups" className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-4 px-10 rounded-xl shadow-lg hover:from-purple-500 hover:to-pink-500 hover:shadow-purple-500/50 hover:scale-105 transition-all duration-300">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+                        <Link href="/browse-groups" className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-4 px-10 rounded-xl shadow-lg hover:from-purple-500 hover:to-pink-500 hover:shadow-purple-500/50 hover:scale-105 transition-all duration-300 animate-button-glow hover:animate-none">
                             🔍 Explore Groups
                         </Link>
-                        <Link href="/add-detail" className="inline-block bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-4 px-10 rounded-xl shadow-lg hover:from-blue-500 hover:to-cyan-500 hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300">
+                        <Link href="/add-detail" className="inline-block bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-4 px-10 rounded-xl shadow-lg hover:from-blue-500 hover:to-cyan-500 hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300 animate-button-glow hover:animate-none" style={{ animationDelay: '0.1s' }}>
                             ➕ Create a Group
                         </Link>
                     </div>
 
                     {/* Stats Section */}
                     <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl">
-                        <div className="text-center">
-                            <div className="text-3xl font-bold text-purple-400">500+</div>
+                        <div className="text-center animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
+                            <div className="text-3xl font-bold text-purple-400 animate-count-up">500+</div>
                             <p className="text-gray-400 text-sm mt-2">Active Groups</p>
                         </div>
-                        <div className="text-center">
-                            <div className="text-3xl font-bold text-pink-400">10K+</div>
+                        <div className="text-center animate-fade-in-up" style={{ animationDelay: '0.9s' }}>
+                            <div className="text-3xl font-bold text-pink-400 animate-count-up" style={{ animationDelay: '0.2s' }}>10K+</div>
                             <p className="text-gray-400 text-sm mt-2">Study Members</p>
                         </div>
-                        <div className="text-center">
-                            <div className="text-3xl font-bold text-blue-400">50+</div>
+                        <div className="text-center animate-fade-in-up" style={{ animationDelay: '1s' }}>
+                            <div className="text-3xl font-bold text-blue-400 animate-count-up" style={{ animationDelay: '0.4s' }}>50+</div>
                             <p className="text-gray-400 text-sm mt-2">Subjects</p>
                         </div>
                     </div>

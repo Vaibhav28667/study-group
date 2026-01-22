@@ -23,7 +23,7 @@ const ViewDetails = ({ params }) => {
                 // Check if user is already a member
                 const userToken = localStorage.getItem('userToken');
                 const userId = localStorage.getItem('userId');
-                if (res.data.members && res.data.members.includes(userId)) {
+                if (res.data.membersArray && Array.isArray(res.data.membersArray) && res.data.membersArray.includes(userId)) {
                     setIsMember(true);
                 }
             }
@@ -153,7 +153,7 @@ const ViewDetails = ({ params }) => {
                                     👥 Members
                                 </p>
                                 <p className="text-white text-xl font-bold">
-                                    {group.members?.length || 0} Members
+                                    {group.members || 0} Members
                                 </p>
                             </div>
                         </div>
