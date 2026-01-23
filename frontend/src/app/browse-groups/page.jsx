@@ -25,6 +25,19 @@ const BrowseGroups = () => {
     }
   };
 
+  const handleDeleteGroup = async (groupId, groupName) => {
+    if (window.confirm(`Are you sure you want to delete "${groupName}"? This action cannot be undone.`)) {
+      try {
+        await axios.delete(`http://localhost:5000/group/delete/${groupId}`);
+        toast.success('Group deleted successfully');
+        getGroups();
+      } catch (error) {
+        console.log(error);
+        toast.error('Failed to delete group');
+      }
+    }
+  };
+
   useEffect(() => {
     getGroups();
   }, []);
@@ -191,12 +204,21 @@ const BrowseGroups = () => {
                 </div>
 
                 {/* Button */}
-                <Link
-                  href={'/view-details/' + g._id}
-                  className="w-full block py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold shadow-md hover:from-cyan-500 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/50 transition-all text-center mt-auto"
-                >
-                  View Details →
-                </Link>
+                <div className="flex gap-3 mt-auto">
+                  <Link
+                    href={'/view-details/' + g._id}
+                    className="flex-1 block py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold shadow-md hover:from-cyan-500 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/50 transition-all text-center"
+                  >
+                    View Details →
+                  </Link>
+                  <button
+                    onClick={() => handleDeleteGroup(g._id, g.name)}
+                    className="py-3 px-4 rounded-xl bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold shadow-md hover:from-red-500 hover:to-orange-500 hover:shadow-lg hover:shadow-red-500/50 transition-all"
+                    title="Delete group"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
             </div>
           ))}
